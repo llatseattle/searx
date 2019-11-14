@@ -23,7 +23,7 @@ dev_requirements = map(str.strip, open('requirements-dev.txt').readlines())
 setup(
     name='searx',
     version=VERSION_STRING,
-    description="A privacy-respecting, hackable metasearch engine",
+    description="A search engine",
     long_description=long_description,
     classifiers=[
         "Development Status :: 4 - Beta",

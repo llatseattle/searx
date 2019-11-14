@@ -164,11 +164,6 @@ class ViewsTestCase(SearxTestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn(b'Allow: /', result.data)
 
-    def test_opensearch_xml(self):
-        result = self.app.get('/opensearch.xml')
-        self.assertEqual(result.status_code, 200)
-        self.assertIn(b'<Description>a privacy-respecting, hackable metasearch engine</Description>', result.data)
-
     def test_favicon(self):
         result = self.app.get('/favicon.ico')
         self.assertEqual(result.status_code, 200)

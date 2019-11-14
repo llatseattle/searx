@@ -58,8 +58,7 @@ form = {
     "q":args.query,
     "categories":args.category.decode('utf-8'),
     "pageno":str(args.pageno),
-    "language":args.lang,
-    "time_range":args.timerange
+    "language":args.lang
 }
 preferences = searx.preferences.Preferences(['oscar'], searx.engines.categories.keys(), searx.engines.engines, [])
 preferences.key_value_settings['safesearch'].parse(args.safesearch)
@@ -89,7 +88,6 @@ result_container_json = {
         "pageno": search_query.pageno,
         "lang": search_query.lang,
         "safesearch": search_query.safesearch,
-        "timerange": search_query.time_range,
         "engines": search_query.engines  
     },
     "results": no_parsed_url(result_container.get_ordered_results()),

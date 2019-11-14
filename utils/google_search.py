@@ -15,7 +15,6 @@ request_params = default_request_params()
 # request_params['category'] = ''
 request_params['pageno'] = 1
 request_params['language'] = 'en_us'
-request_params['time_range'] = ''
 
 params = google.request(argv[1], request_params)
 

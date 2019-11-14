@@ -53,7 +53,6 @@ engine_default_args = {'paging': False,
                        'disabled': False,
                        'suspend_end_time': 0,
                        'continuous_errors': 0,
-                       'time_range_support': False,
                        'offline': False}
 
 

@@ -15,7 +15,6 @@ class TestBingVideosEngine(SearxTestCase):
         dicto['pageno'] = 1
         dicto['language'] = 'fr-FR'
         dicto['safesearch'] = 0
-        dicto['time_range'] = ''
         params = bing_videos.request(query, dicto)
         self.assertTrue('url' in params)
         self.assertTrue(query in params['url'])
@@ -26,7 +25,6 @@ class TestBingVideosEngine(SearxTestCase):
         self.assertTrue('fr-fr' in params['cookies']['_EDGE_S'])
 
         dicto['pageno'] = 2
-        dicto['time_range'] = 'day'
         dicto['safesearch'] = 2
         params = bing_videos.request(query, dicto)
         self.assertTrue('first=29' in params['url'])
