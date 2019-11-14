@@ -1,14 +1,6 @@
 from searx.preferences import (EnumStringSetting, MapSetting, MissingArgumentException, SearchLanguageSetting,
-                               MultipleChoiceSetting, PluginsSetting, ValidationException)
+                               MultipleChoiceSetting, ValidationException)
 from searx.testing import SearxTestCase
-
-
-class PluginStub(object):
-
-    def __init__(self, id, default_on):
-        self.id = id
-        self.default_on = default_on
-
 
 class TestSettings(SearxTestCase):
     # map settings
@@ -108,20 +100,6 @@ class TestSettings(SearxTestCase):
         setting = SearchLanguageSetting('all', choices=['all', 'es', 'es-ES'])
         setting.parse('es_ES')
         self.assertEquals(setting.get_value(), 'es-ES')
-
-    # plugins settings
-    def test_plugins_setting_all_default_enabled(self):
-        plugin1 = PluginStub('plugin1', True)
-        plugin2 = PluginStub('plugin2', True)
-        setting = PluginsSetting(['3'], choices=[plugin1, plugin2])
-        self.assertEquals(setting.get_enabled(), set(['plugin1', 'plugin2']))
-
-    def test_plugins_setting_few_default_enabled(self):
-        plugin1 = PluginStub('plugin1', True)
-        plugin2 = PluginStub('plugin2', False)
-        plugin3 = PluginStub('plugin3', True)
-        setting = PluginsSetting('name', choices=[plugin1, plugin2, plugin3])
-        self.assertEquals(setting.get_enabled(), set(['plugin1', 'plugin3']))
 
 
 class TestPreferences(SearxTestCase):

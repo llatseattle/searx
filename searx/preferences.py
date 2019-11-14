@@ -15,7 +15,6 @@ LANGUAGE_CODES = [l[0] for l in languages]
 LANGUAGE_CODES.append('all')
 DISABLED = 0
 ENABLED = 1
-DOI_RESOLVERS = list(settings['doi_resolvers'])
 
 
 class MissingArgumentException(Exception):
@@ -219,27 +218,10 @@ class EnginesSetting(SwitchableSetting):
             transformed_values.append((engine, category))
         return transformed_values
 
-
-class PluginsSetting(SwitchableSetting):
-
-    def _post_init(self):
-        super(PluginsSetting, self)._post_init()
-        transformed_choices = []
-        for plugin in self.choices:
-            transformed_choice = dict()
-            transformed_choice['default_on'] = plugin.default_on
-            transformed_choice['id'] = plugin.id
-            transformed_choices.append(transformed_choice)
-        self.choices = transformed_choices
-
-    def transform_form_items(self, items):
-        return [item[len('plugin_'):] for item in items]
-
-
 class Preferences(object):
     """Validates and saves preferences to cookies"""
 
-    def __init__(self, themes, categories, engines, plugins):
+    def __init__(self, themes, categories, engines):
         super(Preferences, self).__init__()
 
         self.key_value_settings = {'categories': MultipleChoiceSetting(['general'], choices=categories + ['none']),
@@ -264,14 +246,12 @@ class Preferences(object):
                                                                                 '1': True,
                                                                                 'False': False,
                                                                                 'True': True}),
-                                   'doi_resolver': MultipleChoiceSetting(['oadoi.org'], choices=DOI_RESOLVERS),
                                    'oscar-style': EnumStringSetting(
                                        settings['ui'].get('theme_args', {}).get('oscar_style', 'logicodev'),
                                        choices=['', 'logicodev', 'logicodev-dark', 'pointhi']),
                                    }
 
         self.engines = EnginesSetting('engines', choices=engines)
-        self.plugins = PluginsSetting('plugins', choices=plugins)
         self.unknown_params = {}
 
     def get_as_url_params(self):
@@ -284,9 +264,6 @@ class Preferences(object):
 
         settings_kv['disabled_engines'] = ','.join(self.engines.disabled)
         settings_kv['enabled_engines'] = ','.join(self.engines.enabled)
-
-        settings_kv['disabled_plugins'] = ','.join(self.plugins.disabled)
-        settings_kv['enabled_plugins'] = ','.join(self.plugins.enabled)
 
         return urlsafe_b64encode(compress(urlencode(settings_kv).encode('utf-8'))).decode('utf-8')
 
@@ -304,9 +281,6 @@ class Preferences(object):
             elif user_setting_name == 'disabled_engines':
                 self.engines.parse_cookie((input_data.get('disabled_engines', ''),
                                            input_data.get('enabled_engines', '')))
-            elif user_setting_name == 'disabled_plugins':
-                self.plugins.parse_cookie((input_data.get('disabled_plugins', ''),
-                                           input_data.get('enabled_plugins', '')))
             elif not any(user_setting_name.startswith(x) for x in [
                     'enabled_',
                     'disabled_',
@@ -318,7 +292,6 @@ class Preferences(object):
     def parse_form(self, input_data):
         disabled_engines = []
         enabled_categories = []
-        disabled_plugins = []
         for user_setting_name, user_setting in input_data.items():
             if user_setting_name in self.key_value_settings:
                 self.key_value_settings[user_setting_name].parse(user_setting)
@@ -326,15 +299,12 @@ class Preferences(object):
                 disabled_engines.append(user_setting_name)
             elif user_setting_name.startswith('category_'):
                 enabled_categories.append(user_setting_name[len('category_'):])
-            elif user_setting_name.startswith('plugin_'):
-                disabled_plugins.append(user_setting_name)
             else:
                 self.unknown_params[user_setting_name] = user_setting
         self.key_value_settings['categories'].parse_form(enabled_categories)
         self.engines.parse_form(disabled_engines)
-        self.plugins.parse_form(disabled_plugins)
 
-    # cannot be used in case of engines or plugins
+    # cannot be used in case of engines
     def get_value(self, user_setting_name):
         if user_setting_name in self.key_value_settings:
             return self.key_value_settings[user_setting_name].get_value()
@@ -345,7 +315,6 @@ class Preferences(object):
         for user_setting_name, user_setting in self.key_value_settings.items():
             user_setting.save(user_setting_name, resp)
         self.engines.save(resp)
-        self.plugins.save(resp)
         for k, v in self.unknown_params.items():
             resp.set_cookie(k, v, max_age=COOKIE_MAX_AGE)
         return resp

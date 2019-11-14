@@ -2,22 +2,6 @@
 
 {% extends "simple/base.html" %}
 
-{%- macro plugin_preferences(section) -%}
-{%- for plugin in plugins -%}
-{%- if plugin.preference_section == section -%}
-<fieldset>{{- '' -}}
-    <legend>{{ _(plugin.name) }}</legend>{{- '' -}}
-    <div class="value">
-      {{- checkbox_onoff('plugin_' + plugin.id, plugin.id not in allowed_plugins) -}}
-    </div>{{- '' -}}
-    <div class="description">
-      {{- _(plugin.description) -}}
-    </div>{{- '' -}}
-</fieldset>
-{%- endif -%}
-{%- endfor -%}
-{%- endmacro -%}
-
 {% block head %} {% endblock %}
 {% block content %}
 
@@ -71,19 +55,6 @@
     <p class="description">{{ _('Filter content') }}</p>
   </fieldset>
   {{ plugin_preferences('general') }}
-  <fieldset>
-    <legend>{{ _('Open Access DOI resolver') }}</legend>
-    <p class="value">
-      <select id='doi_resolver' name='doi_resolver'>
-      {%- for doi_resolver_name,doi_resolver_url in doi_resolvers.items() -%}
-         <option value="{{ doi_resolver_name }}" {% if doi_resolver_name == current_doi_resolver %}selected="selected"{% endif %}>
-         {{- doi_resolver_name }} - {{ doi_resolver_url -}}
-         </option>
-      {%- endfor -%}
-      </select>
-    </p>
-    <div class="description"><!-- {{ _('Redirect to open-access versions of publications when available (plugin required)') }} --></div>
-  </fieldset>
   {{ tab_footer() }}
 
   {{ tab_header('maintab', 'engines', _('Engines')) }}

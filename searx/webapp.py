@@ -63,11 +63,9 @@ from searx.utils import (
 )
 from searx.version import VERSION_STRING
 from searx.languages import language_codes as languages
-from searx.search import SearchWithPlugins, get_search_query_from_webapp
+from searx.search import Search, get_search_query_from_webapp
 from searx.query import RawTextQuery
 from searx.autocomplete import searx_bang, backends as autocomplete_backends
-from searx.plugins import plugins
-from searx.plugins.oa_doi_rewrite import get_doi_resolver
 from searx.preferences import Preferences, ValidationException, LANGUAGE_CODES
 from searx.answerers import answerers
 from searx.url_utils import urlencode, urlparse, urljoin
@@ -138,16 +136,13 @@ rtl_locales = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he',
                'ku', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi']
 
 # used when translating category names
-_category_names = (gettext('files'),
-                   gettext('general'),
+_category_names = (gettext('general'),
                    gettext('music'),
                    gettext('social media'),
                    gettext('images'),
                    gettext('videos'),
-                   gettext('it'),
                    gettext('news'),
-                   gettext('map'),
-                   gettext('science'))
+                   gettext('map'))
 
 outgoing_proxies = settings['outgoing'].get('proxies') or None
 
@@ -385,16 +380,6 @@ def render(template_name, override_theme=None, **kwargs):
 
     kwargs['preferences'] = request.preferences
 
-    kwargs['scripts'] = set()
-    for plugin in request.user_plugins:
-        for script in plugin.js_dependencies:
-            kwargs['scripts'].add(script)
-
-    kwargs['styles'] = set()
-    for plugin in request.user_plugins:
-        for css in plugin.css_dependencies:
-            kwargs['styles'].add(css)
-
     return render_template(
         '{}/{}'.format(kwargs['theme'], template_name), **kwargs)
 
@@ -405,7 +390,7 @@ def pre_request():
     request.timings = []
     request.errors = []
 
-    preferences = Preferences(themes, list(categories.keys()), engines, plugins)
+    preferences = Preferences(themes, list(categories.keys()), engines)
     request.preferences = preferences
     try:
         preferences.parse_dict(request.cookies)
@@ -427,16 +412,6 @@ def pre_request():
         except Exception as e:
             logger.exception('invalid settings')
             request.errors.append(gettext('Invalid settings'))
-
-    # request.user_plugins
-    request.user_plugins = []
-    allowed_plugins = preferences.plugins.get_enabled()
-    disabled_plugins = preferences.plugins.get_disabled()
-    for plugin in plugins:
-        if ((plugin.default_on and plugin.id not in disabled_plugins)
-                or plugin.id in allowed_plugins):
-            request.user_plugins.append(plugin)
-
 
 @app.after_request
 def post_request(response):
@@ -509,8 +484,7 @@ def index():
     result_container = None
     try:
         search_query, raw_text_query = get_search_query_from_webapp(request.preferences, request.form)
-        # search = Search(search_query) #  without plugins
-        search = SearchWithPlugins(search_query, request.user_plugins, request)
+        search = Search(search_query)
         result_container = search.search()
     except Exception as e:
         # log exception
@@ -723,7 +697,6 @@ def preferences():
     image_proxy = request.preferences.get_value('image_proxy')
     lang = request.preferences.get_value('language')
     disabled_engines = request.preferences.engines.get_disabled()
-    allowed_plugins = request.preferences.plugins.get_enabled()
 
     # stats for preferences page
     stats = {}
@@ -756,10 +729,6 @@ def preferences():
                   autocomplete_backends=autocomplete_backends,
                   shortcuts={y: x for x, y in engine_shortcuts.items()},
                   themes=themes,
-                  plugins=plugins,
-                  doi_resolvers=settings['doi_resolvers'],
-                  current_doi_resolver=get_doi_resolver(request.args, request.preferences.get_value('doi_resolver')),
-                  allowed_plugins=allowed_plugins,
                   theme=get_current_theme_name(),
                   preferences_url_params=request.preferences.get_as_url_params(),
                   base_url=get_base_url(),
@@ -902,9 +871,6 @@ def config():
                                  'time_range_support': engine.time_range_support,
                                  'timeout': engine.timeout}
                                 for engine_name, engine in engines.items()],
-                    'plugins': [{'name': plugin.name,
-                                 'enabled': plugin.default_on}
-                                for plugin in plugins],
                     'instance_name': settings['general']['instance_name'],
                     'locales': settings['locales'],
                     'default_locale': settings['ui']['default_locale'],
@@ -912,7 +878,6 @@ def config():
                     'safe_search': settings['search']['safe_search'],
                     'default_theme': settings['ui']['default_theme'],
                     'version': VERSION_STRING,
-                    'doi_resolvers': [r for r in settings['doi_resolvers']],
                     'default_doi_resolver': settings['default_doi_resolver'],
                     })
 

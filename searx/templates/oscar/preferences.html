@@ -12,7 +12,6 @@
         <ul class="nav nav-tabs nav-justified hide_if_nojs" role="tablist" style="margin-bottom:20px;">
           <li class="active"><a href="#tab_general" role="tab" data-toggle="tab">{{ _('General') }}</a></li>
           <li><a href="#tab_engine" role="tab" data-toggle="tab">{{ _('Engines') }}</a></li>
-          <li><a href="#tab_plugins" role="tab" data-toggle="tab">{{ _('Plugins') }}</a></li>
           {% if answerers %}<li><a href="#tab_answerers" role="tab" data-toggle="tab">{{ _('Answerers') }}</a></li>{% endif %}
           <li><a href="#tab_cookies" role="tab" data-toggle="tab">{{ _('Cookies') }}</a></li>
         </ul>
@@ -119,18 +118,6 @@
                             <option value="0" {% if not results_on_new_tab %}selected="selected"{% endif %}>{{ _('Off')}}</option>
                         </select>
                     {{ preferences_item_footer(info, label, rtl) }}
-
-                    {% set label = _('Open Access DOI resolver') %}
-                    {% set info = _('Redirect to open-access versions of publications when available (plugin required)') %}
-                    {{ preferences_item_header(info, label, rtl) }}
-                        <select class="form-control" id='doi_resolver' name='doi_resolver'>
-                            {% for doi_resolver_name,doi_resolver_url in doi_resolvers.items() %}
-                            <option value="{{ doi_resolver_name }}" {% if doi_resolver_name == current_doi_resolver %}selected="selected"{% endif %}>
-                                    {{ doi_resolver_name }} - {{ doi_resolver_url }}
-                            </option>
-                             {% endfor %}
-                         </select>
-                    {{ preferences_item_footer(info, label, rtl) }}
                 </div>
                 </fieldset>
             </div>
@@ -214,30 +201,6 @@
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="tab-pane active_if_nojs" id="tab_plugins">
-                <noscript>
-                    <h3>{{ _('Plugins') }}</h3>
-                </noscript>
-                <fieldset>
-                    <div class="container-fluid">
-                        {% for plugin in plugins %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">{{ _(plugin.name) }}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-xs-6 col-sm-4 col-md-6">{{ _(plugin.description) }}</div>
-                                <div class="col-xs-6 col-sm-4 col-md-6">
-                                    <div class="onoff-checkbox">
-                                    {{ checkbox_toggle('plugin_' + plugin.id, plugin.id not in allowed_plugins) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </fieldset>
             </div>
 
             {% if answerers %}
