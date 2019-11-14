@@ -22,15 +22,12 @@ from searx.url_utils import urlencode, urlparse, parse_qsl
 categories = ['news']
 paging = True
 language_support = True
-time_range_support = True
+
 
 # search-url
 base_url = 'https://www.bing.com/'
 search_string = 'news/search?{query}&first={offset}&format=RSS'
 search_string_with_time = 'news/search?{query}&first={offset}&qft=interval%3d"{interval}"&format=RSS'
-time_range_dict = {'day': '7',
-                   'week': '8',
-                   'month': '9'}
 
 
 # remove click
@@ -51,14 +48,8 @@ def image_url_cleanup(url_string):
     return url_string
 
 
-def _get_url(query, language, offset, time_range):
-    if time_range in time_range_dict:
-        search_path = search_string_with_time.format(
-            query=urlencode({'q': query, 'setmkt': language}),
-            offset=offset,
-            interval=time_range_dict[time_range])
-    else:
-        search_path = search_string.format(
+def _get_url(query, language, offset):
+    search_path = search_string.format(
             query=urlencode({'q': query, 'setmkt': language}),
             offset=offset)
     return base_url + search_path
@@ -66,9 +57,6 @@ def _get_url(query, language, offset, time_range):
 
 # do search-request
 def request(query, params):
-    if params['time_range'] and params['time_range'] not in time_range_dict:
-        return params
-
     offset = (params['pageno'] - 1) * 10 + 1
 
     if params['language'] == 'all':
@@ -76,7 +64,7 @@ def request(query, params):
     else:
         language = match_language(params['language'], supported_languages, language_aliases)
 
-    params['url'] = _get_url(query, language, offset, params['time_range'])
+    params['url'] = _get_url(query, language, offset)
 
     return params
 

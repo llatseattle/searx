@@ -20,7 +20,7 @@ categories = ['news']
 paging = True
 language_support = True
 safesearch = True
-time_range_support = True
+
 number_of_results = 10
 
 search_url = 'https://www.google.com/search'\
@@ -28,11 +28,6 @@ search_url = 'https://www.google.com/search'\
     '&tbm=nws'\
     '&gws_rd=cr'\
     '&{search_options}'
-time_range_attr = "qdr:{range}"
-time_range_dict = {'day': 'd',
-                   'week': 'w',
-                   'month': 'm',
-                   'year': 'y'}
 
 
 # do search-request
@@ -41,9 +36,6 @@ def request(query, params):
     search_options = {
         'start': (params['pageno'] - 1) * number_of_results
     }
-
-    if params['time_range'] in time_range_dict:
-        search_options['tbs'] = time_range_attr.format(range=time_range_dict[params['time_range']])
 
     if safesearch and params['safesearch']:
         search_options['safe'] = 'on'

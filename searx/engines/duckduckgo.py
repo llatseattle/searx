@@ -25,7 +25,7 @@ categories = ['general']
 paging = True
 language_support = True
 supported_languages_url = 'https://duckduckgo.com/util/u172.js'
-time_range_support = True
+
 
 language_aliases = {
     'ar-SA': 'ar-XA',
@@ -39,11 +39,6 @@ language_aliases = {
 
 # search-url
 url = 'https://duckduckgo.com/html?{query}&s={offset}&dc={dc_param}'
-time_range_url = '&df={range}'
-
-time_range_dict = {'day': 'd',
-                   'week': 'w',
-                   'month': 'm'}
 
 # specific xpath variables
 result_xpath = '//div[@class="result results_links results_links_deep web-result "]'  # noqa
@@ -65,9 +60,6 @@ def get_region_code(lang, lang_list=[]):
 
 
 def request(query, params):
-    if params['time_range'] not in (None, 'None', '') and params['time_range'] not in time_range_dict:
-        return params
-
     offset = (params['pageno'] - 1) * 30
 
     region_code = get_region_code(params['language'], supported_languages)
@@ -81,8 +73,6 @@ def request(query, params):
         params['data']['v'] = 'l'
         params['data']['o'] = 'json'
         params['data']['api'] = '/d.js'
-        if params['time_range'] in time_range_dict:
-            params['data']['df'] = time_range_dict[params['time_range']]
         if region_code:
             params['data']['kl'] = region_code
     else:
@@ -92,10 +82,6 @@ def request(query, params):
         else:
             params['url'] = url.format(
                 query=urlencode({'q': query}), offset=offset, dc_param=offset)
-
-        if params['time_range'] in time_range_dict:
-            params['url'] += time_range_url.format(range=time_range_dict[params['time_range']])
-
     return params
 
 

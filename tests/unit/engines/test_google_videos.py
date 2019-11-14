@@ -11,7 +11,7 @@ class TestGoogleVideosEngine(SearxTestCase):
         dicto = defaultdict(dict)
         dicto['pageno'] = 1
         dicto['safesearch'] = 1
-        dicto['time_range'] = ''
+        
         params = google_videos.request(query, dicto)
         self.assertIn('url', params)
         self.assertIn(query, params['url'])

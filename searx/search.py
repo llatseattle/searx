@@ -310,13 +310,6 @@ def get_search_query_from_webapp(preferences, form):
     if query_safesearch < 0 or query_safesearch > 2:
         raise SearxParameterException('safesearch', query_safesearch)
 
-    # get time_range
-    query_time_range = form.get('time_range')
-
-    # check time_range
-    if query_time_range not in ('None', None, '', 'day', 'week', 'month', 'year'):
-        raise SearxParameterException('time_range', query_time_range)
-
     # query_engines
     query_engines = raw_text_query.engines
 
@@ -406,7 +399,7 @@ def get_search_query_from_webapp(preferences, form):
 
     return (SearchQuery(query, query_engines, query_categories,
                         query_lang, query_safesearch, query_pageno,
-                        query_time_range, query_timeout),
+                        query_timeout),
             raw_text_query)
 
 
@@ -467,10 +460,6 @@ class Search(object):
             if search_query.pageno > 1 and not engine.paging:
                 continue
 
-            # if time_range is not supported, skip
-            if search_query.time_range and not engine.time_range_support:
-                continue
-
             # set default request parameters
             request_params = {}
             if not engine.offline:
@@ -483,7 +472,6 @@ class Search(object):
                     request_params['language'] = search_query.lang
 
                 request_params['safesearch'] = search_query.safesearch
-                request_params['time_range'] = search_query.time_range
 
             request_params['category'] = selected_engine['category']
             request_params['pageno'] = search_query.pageno

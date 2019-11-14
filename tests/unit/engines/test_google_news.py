@@ -15,7 +15,6 @@ class TestGoogleNewsEngine(SearxTestCase):
         dicto = defaultdict(dict)
         dicto['pageno'] = 1
         dicto['language'] = 'fr-FR'
-        dicto['time_range'] = 'w'
         params = google_news.request(query, dicto)
         self.assertIn('url', params)
         self.assertIn(query, params['url'])

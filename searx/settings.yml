@@ -72,9 +72,7 @@ engines:
   - name : bing videos
     engine : bing_videos
     shortcut : biv
-  - name : digg
-    engine : digg
-    shortcut : dg
+
   - name : wikidata
     engine : wikidata
     shortcut : wd
@@ -90,24 +88,6 @@ engines:
     engine : duckduckgo_images
     shortcut : ddi
     timeout: 3.0
-    disabled : True
-
-  - name : flickr
-    categories : images
-    shortcut : fl
-    engine : flickr_noapi
-
-  - name : gitlab
-    engine : json_engine
-    paging : True
-    search_url : https://gitlab.com/api/v4/projects?search={query}&page={pageno}
-    url_query : web_url
-    title_query : name_with_namespace
-    content_query : description
-    page_size : 20
-    categories : it
-    shortcut : gl
-    timeout : 10.0
     disabled : True
 
   - name : github
@@ -214,11 +194,6 @@ engines:
   - name : yahoo
     engine : yahoo
     shortcut : yh
-    disabled : True
-
-  - name : yandex
-    engine : yandex
-    shortcut : yn
     disabled : True
 
   - name : yahoo news

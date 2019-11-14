@@ -20,7 +20,7 @@ from searx.utils import match_language
 categories = ['videos']
 paging = True
 safesearch = True
-time_range_support = True
+
 number_of_results = 28
 language_support = True
 
@@ -31,11 +31,6 @@ search_string = 'videos/search'\
     '&first={first}'\
     '&scope=video'\
     '&FORM=QBLH'
-time_range_string = '&qft=+filterui:videoage-lt{interval}'
-time_range_dict = {'day': '1440',
-                   'week': '10080',
-                   'month': '43200',
-                   'year': '525600'}
 
 # safesearch definitions
 safesearch_types = {2: 'STRICT',
@@ -62,10 +57,6 @@ def request(query, params):
 
     # query and paging
     params['url'] = base_url + search_path
-
-    # time range
-    if params['time_range'] in time_range_dict:
-        params['url'] += time_range_string.format(interval=time_range_dict[params['time_range']])
 
     return params
 

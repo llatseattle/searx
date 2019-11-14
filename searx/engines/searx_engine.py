@@ -33,7 +33,6 @@ def request(query, params):
         'q': query,
         'pageno': params['pageno'],
         'language': params['language'],
-        'time_range': params['time_range'],
         'category': params['category'],
         'format': 'json'
     }

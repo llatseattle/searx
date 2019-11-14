@@ -22,7 +22,7 @@ from searx.utils import match_language
 categories = ['images']
 paging = True
 safesearch = True
-time_range_support = True
+
 language_support = True
 supported_languages_url = 'https://www.bing.com/account/general'
 number_of_results = 28
@@ -34,11 +34,6 @@ search_string = 'images/search'\
     '&count={count}'\
     '&first={first}'\
     '&FORM=IBASEP'
-time_range_string = '&qft=+filterui:age-lt{interval}'
-time_range_dict = {'day': '1440',
-                   'week': '10080',
-                   'month': '43200',
-                   'year': '525600'}
 
 # safesearch definitions
 safesearch_types = {2: 'STRICT',
@@ -64,9 +59,7 @@ def request(query, params):
         '&ui=' + language + '&F=1'
 
     params['url'] = base_url + search_path
-    if params['time_range'] in time_range_dict:
-        params['url'] += time_range_string.format(interval=time_range_dict[params['time_range']])
-
+    
     return params
 
 

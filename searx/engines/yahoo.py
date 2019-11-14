@@ -20,7 +20,7 @@ from searx.utils import match_language
 categories = ['general']
 paging = True
 language_support = True
-time_range_support = True
+
 
 # search-url
 base_url = 'https://search.yahoo.com/'
@@ -35,11 +35,6 @@ url_xpath = './/h3/a/@href'
 title_xpath = './/h3/a'
 content_xpath = './/div[@class="compText aAbs"]'
 suggestion_xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' AlsoTry ')]//a"
-
-time_range_dict = {'day': ['1d', 'd'],
-                   'week': ['1w', 'w'],
-                   'month': ['1m', 'm']}
-
 language_aliases = {'zh-CN': 'zh-CHS', 'zh-TW': 'zh-CHT', 'zh-HK': 'zh-CHT'}
 
 
@@ -61,13 +56,7 @@ def parse_url(url_string):
         return unquote(url_string[start:end])
 
 
-def _get_url(query, offset, language, time_range):
-    if time_range in time_range_dict:
-        return base_url + search_url_with_time.format(offset=offset,
-                                                      query=urlencode({'p': query}),
-                                                      lang=language,
-                                                      age=time_range_dict[time_range][0],
-                                                      btf=time_range_dict[time_range][1])
+def _get_url(query, offset, language):
     return base_url + search_url.format(offset=offset,
                                         query=urlencode({'p': query}),
                                         lang=language)
@@ -87,13 +76,10 @@ def _get_language(params):
 
 # do search-request
 def request(query, params):
-    if params['time_range'] and params['time_range'] not in time_range_dict:
-        return params
-
     offset = (params['pageno'] - 1) * 10 + 1
     language = _get_language(params)
 
-    params['url'] = _get_url(query, offset, language, params['time_range'])
+    params['url'] = _get_url(query, offset, language)
 
     # TODO required?
     params['cookies']['sB'] = 'fl=1&vl=lang_{lang}&sh=1&rw=new&v=1'\

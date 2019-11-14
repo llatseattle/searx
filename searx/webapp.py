@@ -44,7 +44,7 @@ except:
 from cgi import escape
 from datetime import datetime, timedelta
 from time import time
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import (
     Flask, request, render_template, url_for, Response, make_response,
     redirect, send_from_directory
@@ -597,7 +597,6 @@ def index():
         q=request.form['q'],
         selected_categories=search_query.categories,
         pageno=search_query.pageno,
-        time_range=search_query.time_range,
         number_of_results=format_decimal(number_of_results),
         advanced_search=advanced_search,
         suggestions=suggestion_urls,
@@ -868,7 +867,6 @@ def config():
                                  if isinstance(engine.supported_languages, dict)
                                  else engine.supported_languages,
                                  'safesearch': engine.safesearch,
-                                 'time_range_support': engine.time_range_support,
                                  'timeout': engine.timeout}
                                 for engine_name, engine in engines.items()],
                     'instance_name': settings['general']['instance_name'],

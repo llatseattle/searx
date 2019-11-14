@@ -13,7 +13,7 @@ class TestDuckduckgoEngine(SearxTestCase):
         query = 'test_query'
         dicto = defaultdict(dict)
         dicto['pageno'] = 1
-        dicto['time_range'] = ''
+        
 
         dicto['language'] = 'de-CH'
         params = duckduckgo.request(query, dicto)
@@ -36,13 +36,6 @@ class TestDuckduckgoEngine(SearxTestCase):
         dicto['language'] = 'en'
         params = duckduckgo.request(query, dicto)
         self.assertIn('us-en', params['url'])
-
-    def test_no_url_in_request_year_time_range(self):
-        dicto = defaultdict(dict)
-        query = 'test_query'
-        dicto['time_range'] = 'year'
-        params = duckduckgo.request(query, dicto)
-        self.assertEqual({}, params['url'])
 
     def test_response(self):
         self.assertRaises(AttributeError, duckduckgo.response, None)

@@ -177,14 +177,13 @@ class RawTextQuery(object):
 class SearchQuery(object):
     """container for all the search parameters (query, language, etc...)"""
 
-    def __init__(self, query, engines, categories, lang, safesearch, pageno, time_range, timeout_limit=None):
+    def __init__(self, query, engines, categories, lang, safesearch, pageno, timeout_limit=None):
         self.query = query.encode('utf-8')
         self.engines = engines
         self.categories = categories
         self.lang = lang
         self.safesearch = safesearch
         self.pageno = pageno
-        self.time_range = None if time_range in ('', 'None', None) else time_range
         self.timeout_limit = timeout_limit
 
     def __str__(self):

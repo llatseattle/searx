@@ -22,7 +22,7 @@ class TestGoogleEngine(SearxTestCase):
         dicto = defaultdict(dict)
         dicto['pageno'] = 1
         dicto['language'] = 'fr-FR'
-        dicto['time_range'] = ''
+        
         params = google.request(query, dicto)
         self.assertIn('url', params)
         self.assertIn(query, params['url'])

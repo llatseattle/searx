@@ -30,11 +30,6 @@
                         </div>
                         {% endif %}
                     </div>
-                    {% set language_label = _('Search language') %}
-                    {% set language_info = _('What language do you prefer for search?') %}
-                    {{ preferences_item_header(language_info, language_label, rtl) }}
-						{% include 'oscar/languages.html' %}
-                    {{ preferences_item_footer(language_info, language_label, rtl) }}
 
                     {% set locale_label = _('Interface language') %}
                     {% set locale_info = _('Change the language of the layout') %}

@@ -29,7 +29,7 @@ class TestYahooEngine(SearxTestCase):
         query = 'test_query'
         dicto = defaultdict(dict)
         dicto['pageno'] = 1
-        dicto['time_range'] = ''
+        
         dicto['language'] = 'fr-FR'
         params = yahoo.request(query, dicto)
         self.assertIn('url', params)
@@ -56,13 +56,6 @@ class TestYahooEngine(SearxTestCase):
         self.assertIn('sB', params['cookies'])
         self.assertIn('en', params['cookies']['sB'])
         self.assertIn('en', params['url'])
-
-    def test_no_url_in_request_year_time_range(self):
-        dicto = defaultdict(dict)
-        query = 'test_query'
-        dicto['time_range'] = 'year'
-        params = yahoo.request(query, dicto)
-        self.assertEqual({}, params['url'])
 
     def test_response(self):
         self.assertRaises(AttributeError, yahoo.response, None)

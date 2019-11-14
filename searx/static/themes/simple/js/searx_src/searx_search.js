@@ -107,9 +107,6 @@
         submitIfQuery();
         return false;
       });
-
-      searx.on(d.getElementById('time_range'), 'change', submitIfQuery);
-      searx.on(d.getElementById('language'), 'change', submitIfQuery);
     }
 
   });
