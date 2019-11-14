@@ -90,10 +90,6 @@ engines:
     timeout: 3.0
     disabled : True
 
-  - name : github
-    engine : github
-    shortcut : gh
-
   - name : google
     engine : google
     shortcut : go
@@ -109,49 +105,6 @@ engines:
   - name : google videos
     engine : google_videos
     shortcut : gov
-
-  - name : google scholar
-    engine : xpath
-    paging : True
-    search_url : https://scholar.google.com/scholar?start={pageno}&q={query}&hl=en&as_sdt=0,5&as_vis=1
-    results_xpath : //div[contains(@class, "gs_r")]/div[@class="gs_ri"]
-    url_xpath : .//h3/a/@href
-    title_xpath : .//h3/a
-    content_xpath : .//div[@class="gs_rs"]
-    suggestion_xpath : //div[@id="gs_res_ccl_top"]//a/b
-    page_size : 10
-    first_page_num : 0
-    categories : science
-    shortcut : gos
-
-  - name : google play movies
-    engine : xpath
-    search_url : https://play.google.com/store/search?q={query}&c=movies
-    results_xpath : '//div[@class="WHE7ib mpg5gc"]'
-    title_xpath : './/div[@class="RZEgze"]//div[@title and not(@title="")]/a'
-    url_xpath : './/div[@class="RZEgze"]//div[@title and not(@title="")]/a/@href'
-    content_xpath : './/div[@class="RZEgze"]//a[@class="mnKHRc"]'
-    thumbnail_xpath : './/div[@class="uzcko"]/div/span[1]//img/@data-src'
-    categories : videos
-    shortcut : gpm
-    disabled : True
-
-  - name : google play music
-    engine : xpath
-    search_url : https://play.google.com/store/search?q={query}&c=music
-    results_xpath : '//div[@class="WHE7ib mpg5gc"]'
-    title_xpath : './/div[@class="RZEgze"]//div[@title and not(@title="")]/a'
-    url_xpath : './/div[@class="RZEgze"]//div[@title and not(@title="")]/a/@href'
-    content_xpath : './/div[@class="RZEgze"]//a[@class="mnKHRc"]'
-    thumbnail_xpath : './/div[@class="uzcko"]/div/span[1]//img/@data-src'
-    categories : music
-    shortcut : gps
-    disabled : True
-
-  - name : microsoft academic
-    engine : microsoft_academic
-    categories : science
-    shortcut : ma
 
   - name : qwant
     engine : qwant
@@ -216,16 +169,6 @@ engines:
   - name : vimeo
     engine : vimeo
     shortcut : vm
-
-  - name : wolframalpha
-    shortcut : wa
-    # You can use the engine using the official stable API, but you need an API key
-    # See : http://products.wolframalpha.com/api/
-    # engine : wolframalpha_api
-    # api_key: '' # required!
-    engine : wolframalpha_noapi
-    timeout: 6.0
-    categories : science
 
 locales:
     en : English

@@ -17,20 +17,6 @@
             <div class="tab-pane active" id="tab_general">
                 <fieldset>
                 <div class="container-fluid">
-                    <div class="row form-group">
-                        {% if rtl %}
-                        <div class="col-sm-11 col-md-10">
-                            {% include 'oscar/categories.html' %}
-                        </div>
-                        <label class="col-sm-3 col-md-2">{{ _('Default categories') }}</label>
-                        {% else %}
-                        <label class="col-sm-3 col-md-2">{{ _('Default categories') }}</label>
-                        <div class="col-sm-11 col-md-10 search-categories">
-                            {% include 'oscar/categories.html' %}
-                        </div>
-                        {% endif %}
-                    </div>
-
                     {% set locale_label = _('Interface language') %}
                     {% set locale_info = _('Change the language of the layout') %}
                     {{ preferences_item_header(locale_info, locale_label, rtl) }}
