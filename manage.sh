@@ -139,14 +139,6 @@ build_style() {
 styles() {
     npm_path_setup
 
-    echo '[!] Building legacy style'
-    build_style themes/legacy/less/style.less themes/legacy/css/style.css
-    build_style themes/legacy/less/style-rtl.less themes/legacy/css/style-rtl.css
-    echo '[!] Building courgette style'
-    build_style themes/courgette/less/style.less themes/courgette/css/style.css
-    build_style themes/courgette/less/style-rtl.less themes/courgette/css/style-rtl.css
-    echo '[!] Building pix-art style'
-    build_style themes/pix-art/less/style.less themes/pix-art/css/style.css
     echo '[!] Building bootstrap style'
     build_style less/bootstrap/bootstrap.less css/bootstrap.min.css
 }
